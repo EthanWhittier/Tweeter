@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    tools:context=".view.main.MainActivity">
+
+
+    <LinearLayout
+        android:id="@+id/StatusHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <Button
+            android:id="@+id/CancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:text="Cancel"
+            android:textColor="@color/appColor"
+            android:layout_margin="10dp"
+            android:textSize="17dp">
+
+        </Button>
+
+        <Button
+            android:id="@+id/TweetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/CancelButton"
+            android:text="Tweet"
+            android:textColor="@color/white"
+            android:background="@drawable/custom_rounded_corners"
+            android:layout_marginLeft="150dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:textSize="15dp">
+
+        </Button>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_below="@id/StatusHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+
+        <ImageView
+            android:id="@+id/StatusUserImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </ImageView>
+
+        <EditText
+            android:id="@+id/StatusMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:layout_margin="20dp"
+            android:hint="What's on your mind....?">
+        </EditText>
+
+
+
+    </LinearLayout>
+
+
+
+
+
+</RelativeLayout>

@@ -55,8 +55,8 @@ public class FollowGenerator {
      * user follows.
      *
      * @param userCount the number of users to generate.
-     * @param minFollowersPerUser the minimum number of followers each user will have.
-     * @param maxFollowersPerUser the maximum number of followers each user will have.
+     * @param minFollowersPerUser the minimum number of edu.byu.cs.tweeter.view.main.followers each user will have.
+     * @param maxFollowersPerUser the maximum number of edu.byu.cs.tweeter.view.main.followers each user will have.
      * @return the generated {@link Follow} objects.
      */
     public List<Follow> generateUsersAndFollows(int userCount, int minFollowersPerUser,
@@ -71,8 +71,8 @@ public class FollowGenerator {
      * about how many users a user follows.
      *
      * @param users the list of users to be used to generate follow objects.
-     * @param minFollowersPerUser the minimum number of followers each user will have.
-     * @param maxFollowersPerUser the maximum number of followers each user will have.
+     * @param minFollowersPerUser the minimum number of edu.byu.cs.tweeter.view.main.followers each user will have.
+     * @param maxFollowersPerUser the maximum number of edu.byu.cs.tweeter.view.main.followers each user will have.
      * @param sortOrder specifies the sort order or returned results.
      * @return the generated {@link Follow} objects.
      */
@@ -98,7 +98,7 @@ public class FollowGenerator {
             }
         }
 
-        // For each user, generate a random number of followers between the specified min and max
+        // For each user, generate a random number of edu.byu.cs.tweeter.view.main.followers between the specified min and max
         Random random = new Random();
         for(User user : users) {
             int numbFollowersToGenerate = random.nextInt(
@@ -112,6 +112,10 @@ public class FollowGenerator {
 
         for(User user : users) {
             Follow follow = new Follow(testUser, user);
+            follows.add(follow);
+        }
+        for(User user: users) {
+            Follow follow = new Follow(user, testUser);
             follows.add(follow);
         }
 

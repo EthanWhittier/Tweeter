@@ -1,0 +1,53 @@
+package edu.byu.cs.tweeter.model.net;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import edu.byu.cs.tweeter.model.domain.Status;
+import edu.byu.cs.tweeter.model.domain.Story;
+import edu.byu.cs.tweeter.model.domain.User;
+
+public class StoryGenerator {
+
+    private static StoryGenerator instance;
+
+    private StoryGenerator() {}
+
+    public static StoryGenerator getInstance() {
+        if(instance == null) {
+            instance = new StoryGenerator();
+        }
+
+        return instance;
+    }
+
+
+    public Story generateStory(User user, int statusCount) {
+        List<Status> statuses = new ArrayList<>(statusCount);
+        generateStatuses((ArrayList<Status>) statuses, statusCount);
+
+        return new Story(user, statuses);
+
+    }
+
+    private void generateStatuses(ArrayList<Status> statuses, int statusCount) {
+
+        List<String> mentions = new ArrayList<>();
+        mentions.add("DummyUser");
+        List<String> urls = new ArrayList<>();
+        urls.add("https://google.com");
+
+        while(statuses.size() < statusCount) {
+           statuses.add(new Status("Post", null, LocalDateTime.now(), null, new User("Test", "User",
+                   "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png"))); //Todo add in values here later for testing
+           statuses.add(new Status("Post mention: @DummyUser url: https://google.com", urls, LocalDateTime.now(), mentions, new User("Test", "User",
+                   "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png")));
+           statuses.add(new Status("Post url: https://google.com", urls, LocalDateTime.now(), null, new User("Test", "User",
+                   "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png")));
+        }
+    }
+
+
+}

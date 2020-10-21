@@ -240,7 +240,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
          * specified position.
          *
          * @param position the position of the items whose view type is to be returned.
-         * @return the view type.
+         * @return the view type.x
          */
         @Override
         public int getItemViewType(int position) {

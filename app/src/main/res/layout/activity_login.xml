@@ -5,19 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.LoginActivity">
-
-    <TextView
+    
+    <FrameLayout
+        android:id="@+id/loginFrameLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="An almost completely unimplemented login activity. Replace this with your own and update the code in LoginService."
-        android:layout_centerHorizontal="true"
-        android:layout_margin="16dp"
-        android:layout_above="@id/LoginButton"/>
+        android:layout_height="match_parent">
+    </FrameLayout>
 
-    <Button
-        android:id="@+id/LoginButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Push this Button to Login with a Hard-Coded User"
-        android:layout_centerInParent="true"/>
+    <FrameLayout
+        android:id="@+id/registerFrameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+
+
 </RelativeLayout>

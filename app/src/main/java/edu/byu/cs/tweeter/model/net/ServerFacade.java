@@ -1,18 +1,37 @@
 package edu.byu.cs.tweeter.model.net;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.byu.cs.tweeter.BuildConfig;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
+import edu.byu.cs.tweeter.model.domain.Feed;
 import edu.byu.cs.tweeter.model.domain.Follow;
+import edu.byu.cs.tweeter.model.domain.Status;
+import edu.byu.cs.tweeter.model.domain.Story;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.service.request.FeedRequest;
+import edu.byu.cs.tweeter.model.service.request.FollowRequest;
+import edu.byu.cs.tweeter.model.service.request.FollowersRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.request.LoginRequest;
+import edu.byu.cs.tweeter.model.service.request.LogoutRequest;
+import edu.byu.cs.tweeter.model.service.request.PostStatusRequest;
+import edu.byu.cs.tweeter.model.service.request.RegisterRequest;
+import edu.byu.cs.tweeter.model.service.request.StoryRequest;
+import edu.byu.cs.tweeter.model.service.request.UnfollowRequest;
+import edu.byu.cs.tweeter.model.service.response.FeedResponse;
+import edu.byu.cs.tweeter.model.service.response.FollowResponse;
+import edu.byu.cs.tweeter.model.service.response.FollowersResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.model.service.response.LoginResponse;
+import edu.byu.cs.tweeter.model.service.response.LogoutResponse;
+import edu.byu.cs.tweeter.model.service.response.PostStatusResponse;
+import edu.byu.cs.tweeter.model.service.response.RegisterResponse;
+import edu.byu.cs.tweeter.model.service.response.StoryResponse;
+import edu.byu.cs.tweeter.model.service.response.UnfollowResponse;
 
 /**
  * Acts as a Facade to the Tweeter server. All network requests to the server should go through
@@ -21,6 +40,8 @@ import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 public class ServerFacade {
 
     private static Map<User, List<User>> followeesByFollower;
+    private static Map<User, List<User>> followersByFollowee;
+
 
     /**
      * Performs a login and if successful, returns the logged in user and an auth token. The current
@@ -37,6 +58,62 @@ public class ServerFacade {
     }
 
     /**
+     * Perform a register and if successful, returns the logged in user and an auth token. The
+     * current implementation is hard-coded to return a dummy user and doesn't actually make a network
+     * request
+     *
+     * @param request
+     * @return
+     */
+    public RegisterResponse register(RegisterRequest request) {
+        User user = new User("Test", "User",
+                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+        return new RegisterResponse(user, new AuthToken());
+    }
+
+    /**
+     * Performs a logout and if successful will delete the current authtoken and clear the caches
+     * current implementation is hard-coded to return a success
+     * @param request
+     * @return
+     */
+    public LogoutResponse logout(LogoutRequest request) {
+        return new LogoutResponse(true);
+    }
+
+
+    /**
+     * Posts a edu.byu.cs.tweeter.view.main.status and if successful will put it in the users story and all of the people
+     * who follow this users edu.byu.cs.tweeter.view.main.feed
+     * current implementation is hard-coded to return a dummy edu.byu.cs.tweeter.view.main.status
+     *
+     * @param postStatusRequest
+     * @return
+     */
+    public PostStatusResponse postStatus(PostStatusRequest postStatusRequest) {
+        return new PostStatusResponse(true, new Status("This is a dummy edu.byu.cs.tweeter.view.main.status", null, LocalDateTime.now(), null, postStatusRequest.getAuthor()));
+    }
+
+
+    public StoryResponse getStory(StoryRequest storyRequest) {
+        Story story = getStoryGenerator().generateStory(storyRequest.getUser(), storyRequest.getLimit());
+        return new StoryResponse(story.getStatuses(), true);
+    }
+
+
+    public FeedResponse getFeed(FeedRequest feedRequest) {
+        return new FeedResponse(new Feed(feedRequest.getUser(), getStoryGenerator().generateStory(feedRequest.getUser(), feedRequest.getLimit()).getStatuses()), true);
+    }
+
+    public FollowResponse follow(FollowRequest followRequest) {
+        return new FollowResponse(true, "Follow Successful");
+    }
+
+    public UnfollowResponse unfollow(UnfollowRequest unfollowRequest) {
+        return new UnfollowResponse(true, "Unfollow successful");
+    }
+
+    /**
      * Returns the users that the user specified in the request is following. Uses information in
      * the request object to limit the number of followees returned and to return the next set of
      * followees after any that were returned in a previous request. The current implementation
@@ -48,16 +125,6 @@ public class ServerFacade {
      */
     public FollowingResponse getFollowees(FollowingRequest request) {
 
-        // Used in place of assert statements because Android does not support them
-        if(BuildConfig.DEBUG) {
-            if(request.getLimit() < 0) {
-                throw new AssertionError();
-            }
-
-            if(request.getFollower() == null) {
-                throw new AssertionError();
-            }
-        }
 
         if(followeesByFollower == null) {
             followeesByFollower = initializeFollowees();
@@ -81,6 +148,31 @@ public class ServerFacade {
         }
 
         return new FollowingResponse(responseFollowees, hasMorePages);
+    }
+
+
+    public FollowersResponse getFollowers(FollowersRequest followersRequest) {
+
+        if(followersByFollowee == null) {
+            followersByFollowee = initializeFollowers();
+        }
+
+        List<User> allFollowers = followersByFollowee.get(followersRequest.getFolowee());
+        List<User> responseFollowers = new ArrayList<>(followersRequest.getLimit());
+
+        boolean hasMorePages = false;
+
+        if(followersRequest.getLimit() > 0) {
+            if(allFollowers != null) {
+                int followersIndex = getFollowersStartingIndex(followersRequest.getLastFollower(), allFollowers);
+
+                for(int limitCounter = 0; followersIndex < allFollowers.size() && limitCounter < followersRequest.getLimit(); followersIndex++, limitCounter++) {
+                    responseFollowers.add(allFollowers.get(followersIndex));
+                }
+                hasMorePages = followersIndex < allFollowers.size();
+            }
+        }
+        return new FollowersResponse(responseFollowers, hasMorePages);
     }
 
     /**
@@ -112,6 +204,22 @@ public class ServerFacade {
         return followeesIndex;
     }
 
+   //probably can delete this and combine with the other
+    private int getFollowersStartingIndex(User lastFollower, List<User> allFollowers) {
+
+        int followersIndex = 0;
+
+        if(lastFollower != null) {
+
+            for(int i = 0; i < allFollowers.size(); i++) {
+                if(lastFollower.equals(allFollowers.get(i))) {
+                    followersIndex = i + 1;
+                }
+            }
+        }
+        return followersIndex;
+    }
+
     /**
      * Generates the followee data.
      */
@@ -137,6 +245,24 @@ public class ServerFacade {
         return followeesByFollower;
     }
 
+    private Map<User, List<User>> initializeFollowers() {
+        Map<User, List<User>> followersByFollowee = new HashMap<>();
+
+        List<Follow> follows = getFollowGenerator().generateUsersAndFollows(100, 0, 50, FollowGenerator.Sort.FOLLOWEE_FOLLOWER);
+
+        for(Follow follow: follows) {
+            List<User> followers = followersByFollowee.get(follow.getFollowee());
+
+            if(followers == null) {
+                followers = new ArrayList<>();
+                followersByFollowee.put(follow.getFollowee(), followers);
+            }
+            followers.add(follow.getFollower());
+        }
+
+        return followersByFollowee;
+    }
+
     /**
      * Returns an instance of FollowGenerator that can be used to generate Follow data. This is
      * written as a separate method to allow mocking of the generator.
@@ -146,4 +272,6 @@ public class ServerFacade {
     FollowGenerator getFollowGenerator() {
         return FollowGenerator.getInstance();
     }
+
+    StoryGenerator getStoryGenerator() {return StoryGenerator.getInstance();}
 }
