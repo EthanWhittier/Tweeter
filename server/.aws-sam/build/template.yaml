@@ -1,0 +1,9 @@
+Resources:
+  Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: tweeter.server.lambda.GetFollowingHandler
+      CodeUri: /Users/eiwhitt.99/Documents/code/Twitter/server
+      Runtime: java8.al2
+      Timeout: 300
+      MemorySize: 128
