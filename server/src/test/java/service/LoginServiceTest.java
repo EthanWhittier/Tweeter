@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 
 import tweeter.model.domain.AuthToken;
 import tweeter.model.domain.User;
+import tweeter.model.net.TweeterRemoteException;
 import tweeter.model.service.request.LoginRequest;
 import tweeter.model.service.response.LoginResponse;
 import tweeter.server.dao.UserDAO;
@@ -22,7 +23,7 @@ public class LoginServiceTest {
 
 
     @BeforeEach
-    void setup() {
+    void setup() throws TweeterRemoteException {
 
         loginRequest = new LoginRequest("Test", "password");
         loginResponse = new LoginResponse(new User("Test", "User",
@@ -38,7 +39,7 @@ public class LoginServiceTest {
     }
 
     @Test
-    void testLoginService_returnsUserDAOData() {
+    void testLoginService_returnsUserDAOData() throws TweeterRemoteException {
         Assertions.assertEquals(loginResponse, loginServiceSpy.login(loginRequest));
     }
 

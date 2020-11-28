@@ -26,7 +26,7 @@ public class LoginServiceTest {
     void setup() {
 
 
-        User currentUser = new User("Test", "User", "@TestUser", "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+        User currentUser = new User("Test", "User", "@TestUser", null);
 
         request = new LoginRequest("Test", "password");
         response = new LoginResponse(currentUser, new AuthToken());

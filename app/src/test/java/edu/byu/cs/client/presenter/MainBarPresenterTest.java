@@ -41,9 +41,9 @@ public class MainBarPresenterTest {
     @BeforeEach
     void setup() throws IOException, TweeterRemoteException {
 
-        User currentUser = new User("FirstName", "LastName", null);
+        User currentUser = new User("FirstName", "LastName", null, null);
         User resultUser1 = new User("FirstName1", "LastName1",
-                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png", null);
         Follow follow = new Follow(currentUser, resultUser1);
 
 

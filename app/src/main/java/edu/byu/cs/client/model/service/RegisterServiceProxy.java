@@ -1,14 +1,17 @@
 package edu.byu.cs.client.model.service;
 
+
+
 import java.io.IOException;
 
+import edu.byu.cs.client.util.ByteArrayUtils;
 import tweeter.model.domain.User;
 import edu.byu.cs.client.model.net.ServerFacade;
 import tweeter.model.net.TweeterRemoteException;
 import tweeter.model.service.RegisterServiceInterface;
 import tweeter.model.service.request.RegisterRequest;
 import tweeter.model.service.response.RegisterResponse;
-import edu.byu.cs.client.util.ByteArrayUtils;
+
 
 /**
  * Contains business logic for registering a user
@@ -36,13 +39,15 @@ public class RegisterServiceProxy implements RegisterServiceInterface {
      * @param user the user whose profile image data is to be loaded.
      */
     private void loadImage(User user) throws IOException {
-        byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
+        byte[] bytes = ByteArrayUtils.bytesFromUrl(user.getAlias());
         user.setImageBytes(bytes);
     }
 
 
 
     ServerFacade getServerFacade() {return new ServerFacade(); }
+
+
 
 
 

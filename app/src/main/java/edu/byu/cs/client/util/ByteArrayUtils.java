@@ -11,6 +11,8 @@ import java.net.URL;
  */
 public class ByteArrayUtils {
 
+
+    private final static String s3BucketURL = "https://tweeter340.s3-us-west-2.amazonaws.com/";
     /**
      * Reads the bytes from the specified urlString.
      *
@@ -19,9 +21,9 @@ public class ByteArrayUtils {
      * @throws IOException if an I/O error occurs while attempting to open the URL or read from it's
      * input stream.
      */
-    public static byte [] bytesFromUrl(String urlString) throws IOException {
+    public static byte [] bytesFromUrl(String userAlias) throws IOException {
 
-        URL url = new URL(urlString);
+        URL url = new URL(s3BucketURL + userAlias);
         HttpURLConnection connection = null;
 
         try {

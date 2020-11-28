@@ -25,7 +25,7 @@ public class PostStatusServiceTest {
     @BeforeEach
     void setup() {
 
-        User currentUser = new User("Test", "User", null);
+        User currentUser = new User("Test", "User", null, null);
 
         request = new PostStatusRequest("status", currentUser);
         response = new PostStatusResponse(true);

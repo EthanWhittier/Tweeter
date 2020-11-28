@@ -16,6 +16,7 @@ import edu.byu.cs.client.util.ByteArrayUtils;
 public class LoginServiceProxy implements LoginServiceInterface {
 
 
+    private final String imageUrl = "https://tweeter340.s3-us-west-2.amazonaws.com/";
     private static final String URL_PATH = "/login";
 
     public LoginResponse login(LoginRequest request) throws IOException, TweeterRemoteException {
@@ -35,7 +36,7 @@ public class LoginServiceProxy implements LoginServiceInterface {
      * @param user the user whose profile image data is to be loaded.
      */
     private void loadImage(User user) throws IOException {
-        byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
+        byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getAlias());
         user.setImageBytes(bytes);
     }
 

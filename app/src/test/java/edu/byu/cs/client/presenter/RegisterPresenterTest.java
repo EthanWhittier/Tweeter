@@ -26,7 +26,7 @@ public class RegisterPresenterTest {
     @BeforeEach
     void setup() throws IOException, TweeterRemoteException {
 
-        User currentUser = new User("FirstName", "LastName", null);
+        User currentUser = new User("FirstName", "LastName", null, null);
 
         request = new RegisterRequest("name", "last", "username", "password");
         response = new RegisterResponse(currentUser, new AuthToken());

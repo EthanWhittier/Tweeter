@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.io.IOException;
 
+import edu.byu.cs.client.DataCache;
 import tweeter.model.domain.User;
 import tweeter.model.net.TweeterRemoteException;
 import tweeter.model.service.request.RegisterRequest;
@@ -40,10 +41,10 @@ public class RegisterTask extends AsyncTask<RegisterRequest, Void, RegisterRespo
     @Override
     protected RegisterResponse doInBackground(RegisterRequest... registerRequests) {
         RegisterResponse registerResponse = null;
+        DataCache dataCache = DataCache.getInstance();
 
         try {
             registerResponse = presenter.registerAndLogin(registerRequests[0]);
-
             if(registerResponse.isSuccess()) {
                 loadImage(registerResponse.getUser());
             }
@@ -62,10 +63,10 @@ public class RegisterTask extends AsyncTask<RegisterRequest, Void, RegisterRespo
      */
     private void loadImage(User user) {
         try {
-            byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
+            byte [] bytes = user.getImageBytes();
             user.setImageBytes(bytes);
-        } catch (IOException e) {
-            Log.e(this.getClass().getName(), e.toString(), e);
+        } catch (Exception e) {
+            //CATCH
         }
     }
 

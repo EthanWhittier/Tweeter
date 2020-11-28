@@ -10,6 +10,7 @@ public class RegisterResponse extends Response {
     private AuthToken authToken;
 
 
+
     /**
      * Creates a response indicating that the corresponding request was unsuccessful.
      *

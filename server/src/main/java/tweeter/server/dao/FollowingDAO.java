@@ -86,7 +86,7 @@ public class FollowingDAO {
             }
         }
 
-        return new FollowingResponse(responseFollowees, hasMorePages);
+        return new FollowingResponse(getDummyFollowees(), hasMorePages);
     }
 
     /**

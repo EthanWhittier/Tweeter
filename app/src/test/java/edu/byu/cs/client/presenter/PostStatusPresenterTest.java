@@ -25,7 +25,7 @@ public class PostStatusPresenterTest {
     @BeforeEach
     void setup() throws IOException, TweeterRemoteException {
 
-        User currentUser = new User("FirstName", "LastName", null);
+        User currentUser = new User("FirstName", "LastName", null, null);
 
         request = new PostStatusRequest("Status", currentUser);
         response = new PostStatusResponse("Success");

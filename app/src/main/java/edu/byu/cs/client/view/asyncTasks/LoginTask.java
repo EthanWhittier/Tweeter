@@ -17,6 +17,7 @@ public class LoginTask extends AsyncTask<LoginRequest, Void, LoginResponse> {
     private final LoginPresenter presenter;
     private final Observer observer;
     private Exception exception;
+    private final String imageUrl = "https://tweeter340.s3-us-west-2.amazonaws.com/";
 
     /**
      * An observer interface to be implemented by observers who want to be notified when this task
@@ -56,10 +57,6 @@ public class LoginTask extends AsyncTask<LoginRequest, Void, LoginResponse> {
 
         try {
             loginResponse = presenter.login(loginRequests[0]);
-
-            if(loginResponse.isSuccess()) {
-                loadImage(loginResponse.getUser());
-            }
         } catch (IOException | TweeterRemoteException ex) {
             exception = ex;
         }
@@ -67,19 +64,7 @@ public class LoginTask extends AsyncTask<LoginRequest, Void, LoginResponse> {
         return loginResponse;
     }
 
-    /**
-     * Loads the profile image for the user.
-     *
-     * @param user the user whose profile image is to be loaded.
-     */
-    private void loadImage(User user) {
-        try {
-            byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
-            user.setImageBytes(bytes);
-        } catch (IOException e) {
-            Log.e(this.getClass().getName(), e.toString(), e);
-        }
-    }
+
 
     /**
      * Notifies the observer (on the thread of the invoker of the

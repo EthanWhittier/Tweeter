@@ -14,7 +14,7 @@ import tweeter.model.service.request.FollowersRequest;
 import tweeter.model.service.request.FollowingRequest;
 import tweeter.model.service.response.FollowersResponse;
 
-public class FollowingServiceTest {
+public class FollowersServiceTest {
 
     private static final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
     private static final String FEMALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/daisy_duck.png";
@@ -30,11 +30,11 @@ public class FollowingServiceTest {
      */
     @BeforeEach
     public void setup() throws IOException, TweeterRemoteException {
-        User currentUser = new User("FirstName", "LastName", null);
+        User currentUser = new User("FirstName", "LastName", null, null);
 
-        User resultUser1 = new User("Allen", "Anderson", MALE_IMAGE_URL);
-        User resultUser2 = new User("Amy", "Ames", FEMALE_IMAGE_URL);
-        User resultUser3 = new User("Bob", "Bobson", MALE_IMAGE_URL);
+        User resultUser1 = new User("Allen", "Anderson", MALE_IMAGE_URL, null);
+        User resultUser2 = new User("Amy", "Ames", FEMALE_IMAGE_URL, null);
+        User resultUser3 = new User("Bob", "Bobson", MALE_IMAGE_URL, null);
 
         // Setup request objects to use in the tests
         validRequest = new FollowersRequest(currentUser, 3, null);

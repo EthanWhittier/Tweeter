@@ -1,11 +1,13 @@
 package edu.byu.cs.client.model.service;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import tweeter.model.domain.AuthToken;
 import tweeter.model.domain.User;
@@ -25,16 +27,17 @@ public class RegisterServiceTest {
 
     @BeforeEach
     void setup() throws IOException {
-        User currentUser = new User("Test", "User",
-                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+        String username = UUID.randomUUID().toString();
+        User currentUser = new User("Test", "User", username, null);
 
-        request = new RegisterRequest("first", "last", "username", "password");
+        request = new RegisterRequest("Test", "User", username, "password");
         response = new RegisterResponse(currentUser, new AuthToken());
 
         registerService = new RegisterServiceProxy();
 
 
     }
+
 
     @Test
     void testRegister_returnServerFacadeResponse() throws IOException, TweeterRemoteException {

@@ -3,6 +3,7 @@ package tweeter.server.lambda;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 
+import tweeter.model.net.TweeterRemoteException;
 import tweeter.model.service.request.RegisterRequest;
 import tweeter.model.service.response.RegisterResponse;
 import tweeter.server.service.RegisterService;
@@ -23,7 +24,11 @@ public class RegisterHandler implements  RequestHandler<RegisterRequest, Registe
     @Override
     public RegisterResponse handleRequest(RegisterRequest request, Context context) {
         RegisterService registerService = getRegisterService();
-        return registerService.register(request);
+        try {
+            return registerService.register(request);
+        } catch (TweeterRemoteException e) {
+            return new RegisterResponse(e.getMessage());
+        }
     }
 
     public RegisterService getRegisterService() {

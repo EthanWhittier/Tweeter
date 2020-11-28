@@ -1,7 +1,6 @@
 package tweeter.model.service.request;
 
 
-
 public class RegisterRequest {
 
 
@@ -9,6 +8,7 @@ public class RegisterRequest {
     private String lastName;
     private String username;
     private String password;
+    private byte [] imageBytes;
 
     public RegisterRequest() {}
 
@@ -18,6 +18,16 @@ public class RegisterRequest {
         this.username = username;
         this.password = password;
     }
+
+
+    public RegisterRequest(String firstName, String lastName, String username, String password, byte[] imageBytes) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.password = password;
+        this.imageBytes = imageBytes;
+    }
+
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -33,6 +43,28 @@ public class RegisterRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setImageBytes(byte[] imageBytes) {this.imageBytes = imageBytes;}
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public byte[] getImageBytes() {
+        return imageBytes;
+    }
+
+    public String getFirstName() {
+        return firstName;
     }
 
 }

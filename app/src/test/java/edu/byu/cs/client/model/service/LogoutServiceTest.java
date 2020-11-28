@@ -23,7 +23,7 @@ public class LogoutServiceTest {
     @BeforeEach
     void setup(){
 
-        User currentUser = new User("FirstName", "LastName", null);
+        User currentUser = new User("FirstName", "LastName", null, null);
 
         request = new LogoutRequest(currentUser, new AuthToken());
         response = new LogoutResponse(true);

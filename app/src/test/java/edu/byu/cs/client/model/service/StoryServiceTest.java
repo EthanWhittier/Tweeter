@@ -28,7 +28,7 @@ public class StoryServiceTest {
     void setup() {
 
         User currentUser = new User("Test", "User",
-                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png", null);
         Status status1 = new Status("statues", null, "11/4/2333", null, currentUser);
         Status status2 = new Status("statusTEst", null, "99/23/3330", null, currentUser);
         Status status3 = new Status("StatusTes3", null, "52/29/3040", null, currentUser);

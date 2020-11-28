@@ -49,6 +49,7 @@
             android:textColor="@color/textColor"/>
 
         <EditText
+            android:id="@+id/UserNameEditLogin"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/UserNameText" />
@@ -74,6 +75,7 @@
             android:textColor="@color/textColor"/>
 
         <EditText
+            android:id="@+id/PasswordEditLogin"
             style="@style/Widget.AppCompat.EditText"
             android:layout_width="300dp"
             android:layout_height="wrap_content"

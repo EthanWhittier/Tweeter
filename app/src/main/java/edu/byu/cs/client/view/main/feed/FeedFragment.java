@@ -43,6 +43,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
     private static final String LOG_TAG = "StatusFragment";
     private static final String USER_KEY = "UserKey";
     private static final String AUTH_TOKEN_KEY = "AuthTokenKey";
+    private boolean allLoaded = false;
 
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
@@ -245,10 +246,11 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
         @Override
         public void feedRetrieved(FeedResponse feedResponse) {
             List<Status> statuses = feedResponse.getStatuses();
-
             lastStatus = statuses.size() > 0 ? statuses.get(statuses.size() - 1) : null;
             hasMorePages = feedResponse.getHasMorePages();
-
+            if(!hasMorePages) {
+                allLoaded = true;
+            }
             isLoading = false;
             removeLoadingFooter();
 
@@ -278,16 +280,18 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
 
         @Override
         public void onScrolled(@NotNull RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
+            if (!allLoaded) {
+                super.onScrolled(recyclerView, dx, dy);
 
-            int visibleItemCount = layoutManager.getChildCount();
-            int totalItemCount = layoutManager.getItemCount();
-            int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
 
-            if(!feedRecyclerViewAdapter.isLoading && feedRecyclerViewAdapter.hasMorePages) {
-                if ((visibleItemCount + firstVisibleItemPosition) >=
-                        totalItemCount && firstVisibleItemPosition >= 0) {
-                    feedRecyclerViewAdapter.loadMoreItems();
+                if (!feedRecyclerViewAdapter.isLoading && feedRecyclerViewAdapter.hasMorePages) {
+                    if ((visibleItemCount + firstVisibleItemPosition) >=
+                            totalItemCount && firstVisibleItemPosition >= 0) {
+                        feedRecyclerViewAdapter.loadMoreItems();
+                    }
                 }
             }
         }

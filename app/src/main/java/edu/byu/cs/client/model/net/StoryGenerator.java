@@ -38,14 +38,7 @@ public class StoryGenerator {
         List<String> urls = new ArrayList<>();
         urls.add("https://google.com");
 
-        while(statuses.size() < statusCount) {
-           statuses.add(new Status("Post", null, LocalDateTime.now().toString(), null, new User("Test", "User",
-                   "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png"))); //Todo add in values here later for testing
-           statuses.add(new Status("Post mention: @DummyUser url: https://google.com", urls, LocalDateTime.now().toString(), mentions, new User("Test", "User",
-                   "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png")));
-           statuses.add(new Status("Post url: https://google.com", urls, LocalDateTime.now().toString(), null, new User("Test", "User",
-                   "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png")));
-        }
+
     }
 
 

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -25,6 +26,8 @@ public class LoginFragment extends Fragment implements LoginPresenter.View, Logi
     private LoginPresenter presenter;
     private Toast loginInToast;
     LoginTask.Observer observer;
+    EditText username;
+    EditText password;
 
 
     @Override
@@ -40,10 +43,12 @@ public class LoginFragment extends Fragment implements LoginPresenter.View, Logi
     }
 
 
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        // Setup any handles to view objects here
-        // EditText etFoo = (EditText) view.findViewById(R.id.etFoo);
+
+        username = view.findViewById(R.id.UserNameEditLogin);
+        password = view.findViewById(R.id.PasswordEditLogin);
 
         Button loginButton = (Button) getView().findViewById(R.id.LoginButton);
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -52,8 +57,8 @@ public class LoginFragment extends Fragment implements LoginPresenter.View, Logi
                 loginInToast = Toast.makeText(getContext(), "Logging In", Toast.LENGTH_LONG);
                 loginInToast.show();
 
-                // It doesn't matter what values we put here. We will be logged in with a hard-coded dummy user.
-                LoginRequest loginRequest = new LoginRequest("dummyUserName", "dummyPassword");
+
+                LoginRequest loginRequest = new LoginRequest(username.getText().toString(), password.getText().toString());
                 LoginTask loginTask = new LoginTask(presenter, observer);
                 loginTask.execute(loginRequest);
             }

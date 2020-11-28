@@ -49,6 +49,7 @@
             android:textColor="@color/textColor"/>
 
         <EditText
+            android:id="@+id/FirstNameEdit"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/FirstNameText"/>
@@ -74,6 +75,7 @@
             android:textColor="@color/textColor"/>
 
         <EditText
+            android:id="@+id/LastNameEdit"
             style="@style/Widget.AppCompat.EditText"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
@@ -100,6 +102,7 @@
             android:textColor="@color/textColor"/>
 
         <EditText
+            android:id="@+id/UsernameEdit"
             style="@style/Widget.AppCompat.EditText"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
@@ -126,6 +129,7 @@
             android:textColor="@color/textColor"/>
 
         <EditText
+            android:id="@+id/PasswordEdit"
             style="@style/Widget.AppCompat.EditText"
             android:layout_width="300dp"
             android:layout_height="wrap_content"

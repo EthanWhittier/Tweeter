@@ -30,37 +30,33 @@ public class FollowingServiceProxyTest {
     private FollowingRequest invalidRequest;
     private FollowingResponse failResponse;
 
-    private FollowingServiceProxy followersService;
+    private FollowingServiceProxy followingService;
     private ServerFacade mockServerFacade;
 
     @BeforeEach
     void setup() throws IOException, TweeterRemoteException {
-        User currentUser = new User("FirstName", "LastName", null);
+        User currentUser = new User("FirstName", "LastName", null, null);
 
-        User resultUser1 = new User("Allen", "Anderson", MALE_IMAGE_URL);
-        User resultUser2 = new User("Amy", "Ames", FEMALE_IMAGE_URL);
-        User resultUser3 = new User("Bob", "Bobson", MALE_IMAGE_URL);
+        User resultUser1 = new User("Allen", "Anderson", MALE_IMAGE_URL, null);
+        User resultUser2 = new User("Amy", "Ames", FEMALE_IMAGE_URL, null);
+        User resultUser3 = new User("Bob", "Bobson", MALE_IMAGE_URL, null);
 
         validRequest = new FollowingRequest(currentUser, 3, null);
-        invalidRequest = new FollowingRequest(null, 0, null);
 
         successResponse = new FollowingResponse(Arrays.asList(resultUser1, resultUser2, resultUser3), false);
-        mockServerFacade = Mockito.mock(ServerFacade.class);
 
-        failResponse = new FollowingResponse("Fail");
-
-        followersService = new FollowingServiceProxy();
+        followingService = new FollowingServiceProxy();
 
     }
 
     @Test
     void testGetFollowers_validRequest_validResponse() throws IOException, TweeterRemoteException {
-        Assertions.assertEquals(successResponse.getFollowees(), followersService.getFollowees(validRequest).getFollowees());
+        Assertions.assertEquals(successResponse.getFollowees(), followingService.getFollowees(validRequest).getFollowees());
     }
 
     @Test
     public void testGetFollowers_validRequest_loadProfilePictures() throws IOException, TweeterRemoteException {
-        FollowingResponse response = followersService.getFollowees(validRequest);
+        FollowingResponse response = followingService.getFollowees(validRequest);
 
         for(User user : response.getFollowees()) {
             Assertions.assertNotNull(user.getImageBytes());

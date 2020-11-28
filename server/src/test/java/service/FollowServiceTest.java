@@ -8,7 +8,9 @@ import org.mockito.Mockito;
 import tweeter.model.domain.Follow;
 import tweeter.model.domain.User;
 import tweeter.model.service.request.FollowRequest;
+import tweeter.model.service.request.UnfollowRequest;
 import tweeter.model.service.response.FollowResponse;
+import tweeter.model.service.response.UnfollowResponse;
 import tweeter.server.dao.FollowDAO;
 import tweeter.server.service.FollowService;
 
@@ -22,6 +24,10 @@ public class FollowServiceTest {
     private FollowDAO followDAOMock;
     private FollowService followServiceSpy;
 
+    private UnfollowRequest unfollowRequest;
+    private UnfollowResponse unfollowResponse;
+
+
 
     @BeforeEach
     void setup() {
@@ -34,8 +40,12 @@ public class FollowServiceTest {
         request = new FollowRequest(follow);
         response = new FollowResponse(true, "Follow Successful");
 
+        unfollowRequest = new UnfollowRequest(follow);
+        unfollowResponse = new UnfollowResponse(true, "Unfollow Successful");
+
         followDAOMock = Mockito.mock(FollowDAO.class);
         Mockito.when(followDAOMock.follow(request)).thenReturn(response);
+        Mockito.when(followDAOMock.unfollow(unfollowRequest)).thenReturn(unfollowResponse);
 
         followServiceSpy = Mockito.spy(new FollowService());
         Mockito.when(followServiceSpy.getFollowDAO()).thenReturn(followDAOMock);
@@ -47,4 +57,9 @@ public class FollowServiceTest {
         Assertions.assertEquals(response.isSuccess(), followServiceSpy.follow(request).isSuccess());
     }
 
+
+    @Test
+    void testFollowService_Unfollow() {
+        Assertions.assertEquals(unfollowResponse.isSuccess(), followServiceSpy.unfollow(unfollowRequest).isSuccess());
+    }
 }

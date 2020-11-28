@@ -30,7 +30,7 @@ public class FeedServiceTest {
     void setup() {
 
         User user = new User("Test", "User",
-                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png", null);
         Status status1 = new Status("Hello", null, "10/4/2393", null, user);
         Status status2 = new Status("Test", null, "39/23/3930", null, user);
         Status status3 = new Status("Test2", null, "58/29/3940", null, user);

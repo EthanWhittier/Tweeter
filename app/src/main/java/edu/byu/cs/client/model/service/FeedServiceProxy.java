@@ -19,7 +19,9 @@ public class FeedServiceProxy implements FeedServiceInterface {
         ServerFacade serverFacade = getServerFacade();
         FeedResponse feedResponse = serverFacade.getFeed(feedRequest, FEED_URL);
         if(feedResponse.isSuccess()) {
-            loadImages(feedResponse);
+            if(feedResponse.getStatuses().size() > 0) {
+                loadImages(feedResponse);
+            }
         }
         return feedResponse;
     }

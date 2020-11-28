@@ -26,7 +26,7 @@ public class LoginPresenterTest {
 
     @BeforeEach
     void setup() throws IOException, TweeterRemoteException {
-        User currentUser = new User("FirstName", "LastName", null);
+        User currentUser = new User("FirstName", "LastName", null, null);
 
         request = new LoginRequest("Test", "password");
         response = new LoginResponse(currentUser, new AuthToken());

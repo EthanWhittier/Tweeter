@@ -38,8 +38,8 @@ public class FollowServiceTest {
     @BeforeEach
     void setup() {
 
-        user1 = new User("Daffy", "Duck", "");
-        user2 = new User("Fred", "Flintstone", "");
+        user1 = new User("Daffy", "Duck", "", null);
+        user2 = new User("Fred", "Flintstone", "", null);
 
         followRequest = new FollowRequest(new Follow(user1, user2));
         unfollowRequest = new UnfollowRequest(new Follow(user1, user2));

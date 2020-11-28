@@ -28,7 +28,7 @@ public class StoryPresenterTest {
     @BeforeEach
     void setup() throws IOException, TweeterRemoteException {
 
-        User currentUser = new User("FirstName", "LastName", "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+        User currentUser = new User("FirstName", "LastName", "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png", null);
         List<Status> statuses = new ArrayList<>();
         statuses.add(new Status("status", null, null, null, currentUser));
 

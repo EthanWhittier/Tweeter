@@ -13,18 +13,22 @@ public class User implements Comparable<User>, Serializable {
     private  String alias;
     private  String imageUrl;
     private byte [] imageBytes;
+    private String password;
 
     public User() {}
 
-    public User(String firstName, String lastName, String imageURL) {
-        this(firstName, lastName, String.format("@%s%s", firstName, lastName), imageURL);
+    public User(String firstName, String lastName, String url){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.imageUrl = url;
     }
 
-    public User(String firstName, String lastName, String alias, String imageURL) {
+
+    public User(String firstName, String lastName, String alias, byte[] imageURL) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.alias = alias;
-        this.imageUrl = imageURL;
+        this.imageBytes = imageURL;
     }
 
 
@@ -52,9 +56,32 @@ public class User implements Comparable<User>, Serializable {
         return imageBytes;
     }
 
+    public String getPassword() {return password;}
+
     public void setImageBytes(byte[] imageBytes) {
         this.imageBytes = imageBytes;
     }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 
     @Override
     public boolean equals(Object o) {

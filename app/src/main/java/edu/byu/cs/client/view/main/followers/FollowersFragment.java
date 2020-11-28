@@ -213,7 +213,7 @@ public class FollowersFragment extends Fragment implements FollowersPresenter.Vi
         }
 
         private void addLoadingFooter() {
-            addItem(new User("Dummy", "User", ""));
+            addItem(new User("Dummy", "User", "", null));
         }
 
         private void removeLoadingFooter() {
