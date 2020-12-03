@@ -41,7 +41,7 @@ public class RegisterTask extends AsyncTask<RegisterRequest, Void, RegisterRespo
     @Override
     protected RegisterResponse doInBackground(RegisterRequest... registerRequests) {
         RegisterResponse registerResponse = null;
-        DataCache dataCache = DataCache.getInstance();
+
 
         try {
             registerResponse = presenter.registerAndLogin(registerRequests[0]);

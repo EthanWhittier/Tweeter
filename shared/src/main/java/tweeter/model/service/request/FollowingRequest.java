@@ -10,9 +10,9 @@ import tweeter.model.domain.User;
  */
 public class FollowingRequest {
 
-    private User follower;
+    private String follower;
     private int limit;
-    private User lastFollowee;
+    private String lastFollowee;
 
     /**
      * Allows construction of the object from Json. Private so it won't be called in normal code.
@@ -28,7 +28,7 @@ public class FollowingRequest {
      *                     there was no previous request or if no followees were returned in the
      *                     previous request).
      */
-    public FollowingRequest(User follower, int limit, User lastFollowee) {
+    public FollowingRequest(String follower, int limit, String lastFollowee) {
         this.follower = follower;
         this.limit = limit;
         this.lastFollowee = lastFollowee;
@@ -39,7 +39,7 @@ public class FollowingRequest {
      *
      * @return the follower.
      */
-    public User getFollower() {
+    public String getFollower() {
         return follower;
     }
 
@@ -48,7 +48,7 @@ public class FollowingRequest {
      *
      * @param follower the follower.
      */
-    public void setFollower(User follower) {
+    public void setFollower(String follower) {
         this.follower = follower;
     }
 
@@ -76,7 +76,7 @@ public class FollowingRequest {
      *
      * @return the last followee.
      */
-    public User getLastFollowee() {
+    public String getLastFollowee() {
         return lastFollowee;
     }
 
@@ -85,7 +85,7 @@ public class FollowingRequest {
      *
      * @param lastFollowee the last followee.
      */
-    public void setLastFollowee(User lastFollowee) {
+    public void setLastFollowee(String lastFollowee) {
         this.lastFollowee = lastFollowee;
     }
 }

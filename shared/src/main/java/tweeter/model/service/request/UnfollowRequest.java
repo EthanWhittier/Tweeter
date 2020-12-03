@@ -7,14 +7,28 @@ public class UnfollowRequest {
 
     public UnfollowRequest() {}
 
-    private Follow follow;
+    private String follower;
+    private String followee;
 
-    public UnfollowRequest(Follow follow) {
-        this.follow = follow;
+    public UnfollowRequest(String follower, String followee) {
+        this.follower = follower;
+        this.followee = followee;
     }
 
-    public Follow getFollow() {
-        return follow;
+
+    public String getFollower() {
+        return follower;
     }
 
+    public void setFollower(String follower) {
+        this.follower = follower;
+    }
+
+    public String getFollowee() {
+        return followee;
+    }
+
+    public void setFollowee(String followee) {
+        this.followee = followee;
+    }
 }

@@ -5,27 +5,40 @@ import tweeter.model.domain.User;
 public class FollowersRequest {
 
 
-    private User folowee;
+    private String followee;
     private int limit;
-    private  User lastFollower;
+    private  String lastFollower;
 
     public FollowersRequest() {}
 
-    public FollowersRequest(User folowee, int limit, User lastFollower) {
-        this.folowee = folowee;
+    public FollowersRequest(String followee, int limit, String lastFollower) {
+        this.followee = followee;
         this.limit = limit;
         this.lastFollower = lastFollower;
-    }
-
-    public User getFolowee() {
-        return folowee;
     }
 
     public int getLimit() {
         return limit;
     }
 
-    public User getLastFollower() {
+    public String getLastFollower() {
         return lastFollower;
     }
+
+    public String getFollowee() {
+        return followee;
+    }
+
+    public void setFollowee(String followee) {
+        this.followee = followee;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    public void setLastFollower(String lastFollower) {
+        this.lastFollower = lastFollower;
+    }
 }
+

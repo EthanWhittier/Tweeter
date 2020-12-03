@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import edu.byu.cs.client.DataCache;
 import edu.byu.cs.client.R;
 import tweeter.model.domain.AuthToken;
 import tweeter.model.domain.User;
@@ -50,6 +51,12 @@ public class MainActivity extends AppCompatActivity implements MainBarPresenter.
     LogoutTask.Observer observer;
     PostStatusTask.Observer postStatusObserver;
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //Clear the Activity's bundle of the subsidiary fragments' bundles.
+        outState.clear();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements MainBarPresenter.
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LogoutRequest logoutRequest = new LogoutRequest(user, new AuthToken());
+                LogoutRequest logoutRequest = new LogoutRequest(user, DataCache.getInstance().getAuthToken());
                 LogoutTask logoutTask = new LogoutTask(observer, presenter);
                 logoutTask.execute(logoutRequest);
             }
@@ -115,8 +122,8 @@ public class MainActivity extends AppCompatActivity implements MainBarPresenter.
 
     @Override
     public void logoutSuccessful(LogoutResponse logoutResponse) {
+        finishAffinity();
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-
         startActivity(intent);
     }
 

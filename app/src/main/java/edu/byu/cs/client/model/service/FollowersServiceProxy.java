@@ -24,9 +24,15 @@ public class FollowersServiceProxy implements FollowersServiceInterface {
 
 
     private void loadImages(FollowersResponse response) throws IOException {
+
         for(User user : response.getFollowers()) {
-            byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
-            user.setImageBytes(bytes);
+           try {
+               byte[] bytes = ByteArrayUtils.bytesFromUrl(user.getAlias());
+               user.setImageBytes(bytes);
+           } catch (Exception e) {
+               byte[] bytes = ByteArrayUtils.bytesFromUrl("eiwhitt"); //DUMMY IMAGE
+               user.setImageBytes(bytes);
+           }
         }
     }
 

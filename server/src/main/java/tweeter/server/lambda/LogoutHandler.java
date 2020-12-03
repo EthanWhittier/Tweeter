@@ -21,6 +21,7 @@ public class LogoutHandler implements RequestHandler<LogoutRequest, LogoutRespon
     @Override
     public LogoutResponse handleRequest(LogoutRequest request, Context context) {
         LogoutService logoutService = new LogoutService();
+        context.getLogger().log(request.getAuthToken().getAuthToken());
         return logoutService.logout(request);
     }
     

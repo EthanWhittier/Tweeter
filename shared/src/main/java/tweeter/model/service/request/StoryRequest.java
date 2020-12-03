@@ -10,14 +10,14 @@ public class StoryRequest {
 
     private User user;
     private int limit;
-    private Status lastStatus;
+    private long lastCreated;
 
     public StoryRequest() {}
 
-    public StoryRequest(User user, int limit, Status lastStatus) {
+    public StoryRequest(User user, int limit, long lastCreated) {
         this.user = user;
         this.limit = limit;
-        this.lastStatus = lastStatus;
+        this.lastCreated = lastCreated;
     }
 
     public User getUser() {
@@ -28,7 +28,21 @@ public class StoryRequest {
         return limit;
     }
 
-    public Status getLastStatus() {
-        return lastStatus;
+    public void setUser(User user) {
+        this.user = user;
     }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    public long getLastCreated() {
+        return lastCreated;
+    }
+
+    public void setLastCreated(long lastCreated) {
+        this.lastCreated = lastCreated;
+    }
+
+
 }

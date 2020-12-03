@@ -21,11 +21,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.byu.cs.client.R;
+import edu.byu.cs.client.util.ByteArrayUtils;
 import tweeter.model.domain.AuthToken;
 import tweeter.model.domain.Feed;
 import tweeter.model.domain.Status;
@@ -121,18 +125,24 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
         }
 
 
-        void bindStatus(Status status) {
+        void bindStatus(Status status) throws IOException {
             User author = status.getAuthor();
-            userImage.setImageDrawable(ImageUtils.drawableFromByteArray(author.getImageBytes()));
+            userImage.setImageDrawable(ImageUtils.drawableFromByteArray(status.getAuthor().getImageBytes()));
             userAlias.setText(author.getAlias());
             userName.setText(author.getName());
-            timestamp.setText(status.getCreatedDate());
+            timestamp.setText(formatDate(status.getCreatedDate()));
             statusView.setText(createMentionLinks(status));
             statusView.setMovementMethod(LinkMovementMethod.getInstance());
         }
 
+        private String formatDate(long createdDate) {
+            Timestamp timestamp = new Timestamp(createdDate);
+            SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+            return formatter.format(timestamp);
+        }
+
         private SpannableStringBuilder createMentionLinks(Status status) {
-            SpannableStringBuilder ssb = new SpannableStringBuilder(status.getMessage());
+            SpannableStringBuilder ssb = new SpannableStringBuilder(status.getStatus());
             if(status.getMentions() != null) {
                 for(String mention: status.getMentions()) {
                     ssb.setSpan(new ClickableSpan() {
@@ -143,7 +153,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
                             intent.putExtra(AUTH_TOKEN_KEY, new AuthToken());
                             startActivity(intent);
                         }
-                    }, firstIndex(status.getMessage(), mention), lastIndex(status.getMessage(), mention), 0);
+                    }, firstIndex(status.getStatus(), mention), lastIndex(status.getStatus(), mention), 0);
                 }
             }
             if(status.getUrls() != null) {
@@ -154,7 +164,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
                             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                             startActivity(browserIntent);
                         }
-                    }, status.getMessage().indexOf(url), (status.getMessage().indexOf(url) + (url.length())), 0);
+                    }, status.getStatus().indexOf(url), (status.getStatus().indexOf(url) + (url.length())), 0);
                 }
             }
 
@@ -178,7 +188,9 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
 
         private boolean hasMorePages;
         private boolean isLoading = false;
-        private Status lastStatus;
+        private long lastCreatedFeed = 0;
+        private String lastUserFeed;
+
 
 
         FeedRecyclerViewAdapter() {loadMoreItems();}
@@ -220,7 +232,11 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
         @Override
         public void onBindViewHolder(@NonNull FeedHolder holder, int position) {
             if(!isLoading) {
-                holder.bindStatus(statuses.get(position));
+                try {
+                    holder.bindStatus(statuses.get(position));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -239,15 +255,18 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
             addLoadingFooter();
 
             GetFeedTask getFeedTask = new GetFeedTask(presenter, this);
-            FeedRequest feedRequest = new FeedRequest(user, PAGE_SIZE, lastStatus);
+            FeedRequest feedRequest = new FeedRequest(user, PAGE_SIZE, lastCreatedFeed, lastUserFeed);
             getFeedTask.execute(feedRequest);
         }
 
         @Override
         public void feedRetrieved(FeedResponse feedResponse) {
             List<Status> statuses = feedResponse.getStatuses();
-            lastStatus = statuses.size() > 0 ? statuses.get(statuses.size() - 1) : null;
+            lastCreatedFeed = feedResponse.getLastCreatedFeed();
+
+            lastUserFeed = feedResponse.getLastUserFeed();
             hasMorePages = feedResponse.getHasMorePages();
+
             if(!hasMorePages) {
                 allLoaded = true;
             }
@@ -263,7 +282,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
 
         }
 
-        private void addLoadingFooter() {addItem(new Status("Loading", null, LocalDateTime.now().toString(), null, null));}
+        private void addLoadingFooter() {addItem(new Status("Loading", null, LocalDateTime.now().getYear(), null, null));}
 
 
         private void removeLoadingFooter() {removeItem(statuses.get(statuses.size() - 1));}

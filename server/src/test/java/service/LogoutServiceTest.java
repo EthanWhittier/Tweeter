@@ -9,6 +9,7 @@ import tweeter.model.domain.AuthToken;
 import tweeter.model.domain.User;
 import tweeter.model.service.request.LogoutRequest;
 import tweeter.model.service.response.LogoutResponse;
+import tweeter.server.dao.AuthTokenDAO;
 import tweeter.server.dao.UserDAO;
 import tweeter.server.service.LogoutService;
 
@@ -17,7 +18,7 @@ public class LogoutServiceTest {
 
     private LogoutRequest request;
     private LogoutResponse response;
-    private UserDAO userDAOMock;
+    private AuthTokenDAO AuthTokenDAOMock;
     private LogoutService logoutServiceSpy;
 
 
@@ -28,11 +29,11 @@ public class LogoutServiceTest {
         request = new LogoutRequest(new User(null, null, null, null), new AuthToken());
         response = new LogoutResponse(true);
 
-        userDAOMock = Mockito.mock(UserDAO.class);
-        Mockito.when(userDAOMock.logout(request)).thenReturn(response);
+        AuthTokenDAOMock = Mockito.mock(AuthTokenDAO.class);
+        Mockito.when(AuthTokenDAOMock.logout(request.getAuthToken().getAuthToken())).thenReturn(true);
 
         logoutServiceSpy = Mockito.spy(new LogoutService());
-        Mockito.when(logoutServiceSpy.getUserDAO()).thenReturn(userDAOMock);
+        Mockito.when(logoutServiceSpy.getAuthTokenDAO()).thenReturn(AuthTokenDAOMock);
 
 
     }

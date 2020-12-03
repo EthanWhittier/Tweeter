@@ -34,14 +34,14 @@ public class FollowingServiceTest {
         User resultUser2 = new User("Amy", "Ames", FEMALE_IMAGE_URL);
         User resultUser3 = new User("Bob", "Bobson", MALE_IMAGE_URL);
 
-        request = new FollowingRequest(currentUser, 3, null);
-        response = new FollowingResponse(Arrays.asList(resultUser1, resultUser2, resultUser3), false);
+    //    request = new FollowingRequest(currentUser, 3, null);
+    //    response = new FollowingResponse(Arrays.asList(resultUser1, resultUser2, resultUser3), false);
 
         followingDAOMock = Mockito.mock(FollowingDAO.class);
         Mockito.when(followingDAOMock.getFollowees(request)).thenReturn(response);
 
         followingServiceSpy = Mockito.spy(new FollowingService());
-        Mockito.when(followingServiceSpy.getFollowingDAO()).thenReturn(followingDAOMock);
+    //    Mockito.when(followingServiceSpy.getFollowingDAO()).thenReturn(followingDAOMock);
 
 
     }

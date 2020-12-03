@@ -140,9 +140,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
     private class FollowingRecyclerViewAdapter extends RecyclerView.Adapter<FollowingHolder> implements GetFollowingTask.Observer {
 
         private final List<User> users = new ArrayList<>();
-
-        private User lastFollowee;
-
+        private String lastFollowee;
         private boolean hasMorePages;
         private boolean isLoading = false;
 
@@ -204,7 +202,6 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
 
             if(viewType == LOADING_DATA_VIEW) {
                 view =layoutInflater.inflate(R.layout.loading_row, parent, false);
-
             } else {
                 view = layoutInflater.inflate(R.layout.user_row, parent, false);
             }
@@ -257,7 +254,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             addLoadingFooter();
 
             GetFollowingTask getFollowingTask = new GetFollowingTask(presenter, this);
-            FollowingRequest request = new FollowingRequest(user, PAGE_SIZE, lastFollowee);
+            FollowingRequest request = new FollowingRequest(user.getAlias(), PAGE_SIZE, lastFollowee);
             getFollowingTask.execute(request);
         }
 
@@ -271,11 +268,8 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         public void followeesRetrieved(FollowingResponse followingResponse) {
             List<User> followees = followingResponse.getFollowees();
 
-            if(followees != null) {
-                lastFollowee = (followees.size() > 0) ? followees.get(followees.size() - 1) : null;
-                allLoaded = true;
-            }
-            hasMorePages = followingResponse.getHasMorePages();
+           lastFollowee = followingResponse.getLastFollowee();
+           hasMorePages = followingResponse.getHasMorePages();
 
             isLoading = false;
             removeLoadingFooter();
@@ -339,20 +333,20 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
          */
         @Override
         public void onScrolled(@NotNull RecyclerView recyclerView, int dx, int dy) {
-            if(!allLoaded) {
-                super.onScrolled(recyclerView, dx, dy);
 
-                int visibleItemCount = layoutManager.getChildCount();
-                int totalItemCount = layoutManager.getItemCount();
-                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+            super.onScrolled(recyclerView, dx, dy);
 
-                if (!followingRecyclerViewAdapter.isLoading && followingRecyclerViewAdapter.hasMorePages) {
-                    if ((visibleItemCount + firstVisibleItemPosition) >=
-                            totalItemCount && firstVisibleItemPosition >= 0) {
-                        followingRecyclerViewAdapter.loadMoreItems();
-                    }
+            int visibleItemCount = layoutManager.getChildCount();
+            int totalItemCount = layoutManager.getItemCount();
+            int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+            if (!followingRecyclerViewAdapter.isLoading && followingRecyclerViewAdapter.hasMorePages) {
+                if ((visibleItemCount + firstVisibleItemPosition) >=
+                        totalItemCount && firstVisibleItemPosition >= 0) {
+                    followingRecyclerViewAdapter.loadMoreItems();
                 }
             }
+
         }
     }
 }

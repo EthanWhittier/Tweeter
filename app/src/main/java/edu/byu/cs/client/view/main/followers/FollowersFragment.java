@@ -129,7 +129,7 @@ public class FollowersFragment extends Fragment implements FollowersPresenter.Vi
     private class FollowersRecyclerViewAdapter extends RecyclerView.Adapter<FollowersHolder> implements GetFollowersTask.Observer {
 
         private final List<User> users = new ArrayList<>();
-        private User lastFollower;
+        private String lastFollower;
 
         private boolean hasMorePages;
         private boolean isLoading = false;
@@ -189,7 +189,7 @@ public class FollowersFragment extends Fragment implements FollowersPresenter.Vi
             addLoadingFooter();
 
             GetFollowersTask getFollowersTask = new GetFollowersTask(presenter, this);
-            FollowersRequest request = new FollowersRequest(user, PAGE_SIZE, lastFollower);
+            FollowersRequest request = new FollowersRequest(user.getAlias(), PAGE_SIZE, lastFollower);
             getFollowersTask.execute(request);
         }
 
@@ -197,7 +197,7 @@ public class FollowersFragment extends Fragment implements FollowersPresenter.Vi
         public void followersRetrieved(FollowersResponse followersResponse) {
             List<User> followers = followersResponse.getFollowers();
 
-            lastFollower = (followers.size() > 0) ? followers.get(followers.size() - 1) : null;
+            lastFollower = followersResponse.getLastFollower();
             hasMorePages = followersResponse.getHasMorePages();
 
             isLoading = false;

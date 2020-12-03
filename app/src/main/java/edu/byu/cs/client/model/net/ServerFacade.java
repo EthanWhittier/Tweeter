@@ -18,6 +18,7 @@ import tweeter.model.service.request.FeedRequest;
 import tweeter.model.service.request.FollowRequest;
 import tweeter.model.service.request.FollowersRequest;
 import tweeter.model.service.request.FollowingRequest;
+import tweeter.model.service.request.GetUserRequest;
 import tweeter.model.service.request.LoginRequest;
 import tweeter.model.service.request.LogoutRequest;
 import tweeter.model.service.request.PostStatusRequest;
@@ -28,6 +29,7 @@ import tweeter.model.service.response.FeedResponse;
 import tweeter.model.service.response.FollowResponse;
 import tweeter.model.service.response.FollowersResponse;
 import tweeter.model.service.response.FollowingResponse;
+import tweeter.model.service.response.GetUserResponse;
 import tweeter.model.service.response.LoginResponse;
 import tweeter.model.service.response.LogoutResponse;
 import tweeter.model.service.response.PostStatusResponse;
@@ -124,6 +126,10 @@ public class ServerFacade {
 
     public UnfollowResponse unfollow(UnfollowRequest unfollowRequest, String urlPath) throws IOException, TweeterRemoteException {
         return clientCommunicator.doPost(urlPath, unfollowRequest, null, UnfollowResponse.class);
+    }
+
+    public GetUserResponse getUser(GetUserRequest getUserRequest, String urlPath) throws IOException, TweeterRemoteException {
+        return clientCommunicator.doPost(urlPath, getUserRequest, null, GetUserResponse.class);
     }
 
     /**

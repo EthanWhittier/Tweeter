@@ -14,6 +14,8 @@ public class User implements Comparable<User>, Serializable {
     private  String imageUrl;
     private byte [] imageBytes;
     private String password;
+    private int followers;
+    private int followees;
 
     public User() {}
 
@@ -29,6 +31,10 @@ public class User implements Comparable<User>, Serializable {
         this.lastName = lastName;
         this.alias = alias;
         this.imageBytes = imageURL;
+    }
+
+    public User(String alias) {
+        this.alias = alias;
     }
 
 
@@ -82,6 +88,21 @@ public class User implements Comparable<User>, Serializable {
         this.password = password;
     }
 
+    public int getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(int followers) {
+        this.followers = followers;
+    }
+
+    public int getFollowees() {
+        return followees;
+    }
+
+    public void setFollowees(int followees) {
+        this.followees = followees;
+    }
 
     @Override
     public boolean equals(Object o) {

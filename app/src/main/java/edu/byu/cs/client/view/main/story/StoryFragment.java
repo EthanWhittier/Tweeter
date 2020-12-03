@@ -20,27 +20,35 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import edu.byu.cs.client.DataCache;
 import edu.byu.cs.client.R;
+import edu.byu.cs.client.view.asyncTasks.GetUserTask;
 import tweeter.model.domain.AuthToken;
 import tweeter.model.domain.Status;
 import tweeter.model.domain.User;
+import tweeter.model.service.request.GetUserRequest;
 import tweeter.model.service.request.StoryRequest;
+import tweeter.model.service.response.GetUserResponse;
 import tweeter.model.service.response.StoryResponse;
 import edu.byu.cs.client.presenter.StoryPresenter;
 import edu.byu.cs.client.view.asyncTasks.GetStoryTask;
 import edu.byu.cs.client.view.main.ProfileActivity;
 import edu.byu.cs.client.view.util.ImageUtils;
 
-public class StoryFragment extends Fragment implements StoryPresenter.View {
+public class StoryFragment extends Fragment implements StoryPresenter.View  {
 
 
     private static final String LOG_TAG = "StatusFragment";
     private static final String USER_KEY = "UserKey";
     private static final String AUTH_TOKEN_KEY = "AuthTokenKey";
+    public static final String IS_FOLLOWING = "FollowingKey";
 
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
@@ -89,7 +97,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
 
 
 
-    private class StoryHolder extends RecyclerView.ViewHolder {
+    private class StoryHolder extends RecyclerView.ViewHolder implements GetUserTask.Observer {
 
         private final ImageView userImage;
         private final TextView userAlias;
@@ -112,24 +120,30 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
             userImage.setImageDrawable(ImageUtils.drawableFromByteArray(user.getImageBytes()));
             userAlias.setText(user.getAlias());
             userName.setText(user.getName());
-            timestamp.setText(status.getCreatedDate());
+            timestamp.setText(formatDate(status.getCreatedDate()));
             statusView.setText(createMentionLinks(status));
             statusView.setMovementMethod(LinkMovementMethod.getInstance());
         }
 
+
+        private String formatDate(long createdDate) {
+            Timestamp timestamp = new Timestamp(createdDate);
+            SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+            return formatter.format(timestamp);
+        }
+
         private SpannableStringBuilder createMentionLinks(Status status) {
-            SpannableStringBuilder ssb = new SpannableStringBuilder(status.getMessage());
+            SpannableStringBuilder ssb = new SpannableStringBuilder(status.getStatus());
             if(status.getMentions() != null) {
                 for(String mention: status.getMentions()) {
                     ssb.setSpan(new ClickableSpan() {
                         @Override
                         public void onClick(@NonNull View view) {
-                            Intent intent = new Intent(getContext(), ProfileActivity.class);
-                            intent.putExtra(USER_KEY, user);
-                            intent.putExtra(AUTH_TOKEN_KEY, new AuthToken());
-                            startActivity(intent);
+                            GetUserRequest request = new GetUserRequest(mention, DataCache.getDataCache().getLoggedInUser().getAlias());
+                            GetUserTask getUserTask = new GetUserTask(storyPresenter, StoryHolder.this);
+                            getUserTask.execute(request);
                         }
-                    }, firstIndex(status.getMessage(), mention), lastIndex(status.getMessage(), mention), 0);
+                    }, firstIndex(status.getStatus(), mention), lastIndex(status.getStatus(), mention), 0);
                 }
             }
             if(status.getUrls() != null) {
@@ -140,7 +154,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
                             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                             startActivity(browserIntent);
                         }
-                    }, status.getMessage().indexOf(url), (status.getMessage().indexOf(url) + (url.length())), 0);
+                    }, status.getStatus().indexOf(url), (status.getStatus().indexOf(url) + (url.length())), 0);
                 }
             }
 
@@ -153,7 +167,20 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
         }
 
         private int lastIndex(String message, String mention) {
-            return message.indexOf(mention) + mention.length() + 1;
+            return message.indexOf(mention) + mention.length();
+        }
+
+        @Override
+        public void userRetrieved(GetUserResponse response) {
+            DataCache.getInstance().setCurrentProfile(response.getUser());
+            Intent intent = new Intent(getContext(), ProfileActivity.class);
+            intent.putExtra(IS_FOLLOWING, response.isLoggedInUserFollows());
+            startActivity(intent);
+        }
+
+        @Override
+        public void handleException(Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -163,7 +190,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
 
         private boolean hasMorePages;
         private boolean isLoading = false;
-        private Status lastStatus;
+        private long lastStatus;
 
 
         StoryRecyclerViewAdapter() {loadMoreItems();}
@@ -223,7 +250,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
             addLoadingFooter();
 
             GetStoryTask storyTask = new GetStoryTask(storyPresenter, this);
-            StoryRequest storyRequest = new StoryRequest(user, PAGE_SIZE, lastStatus);
+            StoryRequest storyRequest = new StoryRequest(user, PAGE_SIZE, DataCache.getDataCache().getLastCreatedStory());
             storyTask.execute(storyRequest);
         }
 
@@ -231,9 +258,10 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
         public void storyRetrieved(StoryResponse storyResponse) {
             List<Status> statuses = storyResponse.getUserStatuses();
 
-            lastStatus = statuses.size() > 0 ? statuses.get(statuses.size() - 1) : null;
+            lastStatus = storyResponse.getLastStatus();
             hasMorePages = storyResponse.getHasMorePages();
 
+            getMentions(storyResponse.getUserStatuses());
             isLoading = false;
             removeLoadingFooter();
 
@@ -241,8 +269,21 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
         }
 
 
+        private void getMentions(List<Status> statuses) {
+            for(Status status : statuses) {
+                List<String> mentions = new ArrayList<>();
+                for(String s : status.getStatus().split(" ")) {
+                    if(s.startsWith("@")) {
+                        mentions.add(s.substring(1));
+                    }
+                }
+                status.setMentions(mentions);
+            }
+        }
 
-        private void addLoadingFooter() {addItem(new Status("Loading", null, LocalDateTime.now().toString(), null, null));}
+
+
+        private void addLoadingFooter() {addItem(new Status("Loading", null, LocalDateTime.now().getYear(), null, null));}
 
         private void removeLoadingFooter() {removeItem(statuses.get(statuses.size() - 1));}
 

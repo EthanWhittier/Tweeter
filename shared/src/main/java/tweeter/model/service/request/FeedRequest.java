@@ -8,14 +8,16 @@ public class FeedRequest {
 
     private User user;
     private int limit;
-    private  Status lastStatus;
+    private  long lastCreatedFeed;
+    private String lastUserFeed;
 
     public FeedRequest() {}
 
-    public FeedRequest(User user, int limit, Status lastStatus) {
+    public FeedRequest(User user, int limit, long lastCreatedFeed, String lastUserFeed) {
         this.user = user;
         this.limit = limit;
-        this.lastStatus = lastStatus;
+        this.lastCreatedFeed = lastCreatedFeed;
+        this.lastUserFeed = lastUserFeed;
     }
 
     public User getUser() {
@@ -26,8 +28,27 @@ public class FeedRequest {
         return limit;
     }
 
-    public Status getLastStatus() {
-        return lastStatus;
+    public void setUser(User user) {
+        this.user = user;
     }
 
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    public long getLastCreatedFeed() {
+        return lastCreatedFeed;
+    }
+
+    public void setLastCreatedFeed(long lastCreatedFeed) {
+        this.lastCreatedFeed = lastCreatedFeed;
+    }
+
+    public String getLastUserFeed() {
+        return lastUserFeed;
+    }
+
+    public void setLastUserFeed(String lastUserFeed) {
+        this.lastUserFeed = lastUserFeed;
+    }
 }

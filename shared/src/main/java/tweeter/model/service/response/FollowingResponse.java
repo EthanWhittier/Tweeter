@@ -12,6 +12,7 @@ import tweeter.model.service.request.FollowingRequest;
 public class FollowingResponse extends PagedResponse {
 
     private List<User> followees;
+    private String lastFollowee;
 
     /**
      * Creates a response indicating that the corresponding request was unsuccessful. Sets the
@@ -29,9 +30,22 @@ public class FollowingResponse extends PagedResponse {
      * @param followees the followees to be included in the result.
      * @param hasMorePages an indicator of whether more data is available for the request.
      */
-    public FollowingResponse(List<User> followees, boolean hasMorePages) {
+    public FollowingResponse(List<User> followees, boolean hasMorePages, String lastFollowee) {
         super(true, hasMorePages);
         this.followees = followees;
+        this.lastFollowee = lastFollowee;
+    }
+
+    public void setFollowees(List<User> followees) {
+        this.followees = followees;
+    }
+
+    public String getLastFollowee() {
+        return lastFollowee;
+    }
+
+    public void setLastFollowee(String lastFollowee) {
+        this.lastFollowee = lastFollowee;
     }
 
     /**

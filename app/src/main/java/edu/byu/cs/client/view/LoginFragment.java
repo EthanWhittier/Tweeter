@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import edu.byu.cs.client.DataCache;
 import edu.byu.cs.client.R;
 import tweeter.model.service.request.LoginRequest;
 import tweeter.model.service.response.LoginResponse;
@@ -83,6 +84,9 @@ public class LoginFragment extends Fragment implements LoginPresenter.View, Logi
     @Override
     public void loginSuccessful(LoginResponse loginResponse) {
         Intent intent = new Intent(getContext(), MainActivity.class);
+        DataCache dataCache = DataCache.getInstance();
+        dataCache.setAuthToken(loginResponse.getAuthToken());
+        dataCache.setLoggedInUser(loginResponse.getUser());
 
         intent.putExtra(MainActivity.CURRENT_USER_KEY, loginResponse.getUser());
         intent.putExtra(MainActivity.AUTH_TOKEN_KEY, loginResponse.getAuthToken());

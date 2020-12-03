@@ -7,27 +7,41 @@ import java.util.List;
 public class Status {
 
 
-    private String message;
+    private String status;
     private List<String> urls;
-    private String createdDate;
+    private long createdDate;
     private List<String> mentions;
     private User author;
+    private String firstName;
+    private String lastName;
 
 
-    public Status(String message, List<String> urls, String createdDate, List<String> mentions, User author) {
-        this.message = message;
+
+    public Status(String status, List<String> urls, long createdDate, List<String> mentions, User author) {
+        this.status = status;
         this.urls = urls;
         this.createdDate = createdDate;
         this.mentions = mentions;
         this.author = author;
     }
 
-    public String getMessage() {
-        return message;
+    public Status(String status, long createdDate) {
+        this.status = status;
+        this.createdDate = createdDate;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public Status(User author, String status, long createdDate) {
+        this.status = status;
+        this.author = author;
+        this.createdDate = createdDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String message) {
+        this.status = message;
     }
 
     public List<String> getUrls() {
@@ -38,11 +52,11 @@ public class Status {
         this.urls = urls;
     }
 
-    public String getCreatedDate() {
+    public long getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(String createdDate) {
+    public void setCreatedDate(long createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -57,6 +71,22 @@ public class Status {
     public User getAuthor() {return author;}
 
     public void setAuthor(User author) {this.author = author;}
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
     /*
     public String formatDate() {

@@ -3,7 +3,9 @@ package tweeter.server.service;
 import tweeter.model.service.FollowingServiceInterface;
 import tweeter.model.service.request.FollowingRequest;
 import tweeter.model.service.response.FollowingResponse;
+import tweeter.server.dao.FollowDAO;
 import tweeter.server.dao.FollowingDAO;
+import tweeter.server.factory.FactoryManager;
 
 public class FollowingService implements FollowingServiceInterface {
 
@@ -19,7 +21,7 @@ public class FollowingService implements FollowingServiceInterface {
      */
     @Override
     public FollowingResponse getFollowees(FollowingRequest request) {
-        return getFollowingDAO().getFollowees(request);
+        return getFollowDAO().getFolloweesOfUser(request);
     }
 
     /**
@@ -29,7 +31,7 @@ public class FollowingService implements FollowingServiceInterface {
      *
      * @return the instance.
      */
-    public FollowingDAO getFollowingDAO() {
-        return new FollowingDAO();
+    public FollowDAO getFollowDAO() {
+        return FactoryManager.getDAOFactory().makeFollowDAO();
     }
 }

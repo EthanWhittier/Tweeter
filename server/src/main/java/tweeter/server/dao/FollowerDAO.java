@@ -39,23 +39,7 @@ public class FollowerDAO {
 
     public FollowersResponse getFollowers(FollowersRequest followersRequest) {
 
-
-        List<User> allFollowers = getDummyFollowers();
-        List<User> responseFollowers = new ArrayList<>(followersRequest.getLimit());
-
-        boolean hasMorePages = false;
-
-        if(followersRequest.getLimit() > 0) {
-            if(allFollowers != null) {
-                int followersIndex = getFollowersStartingIndex(followersRequest.getLastFollower(), allFollowers);
-
-                for(int limitCounter = 0; followersIndex < allFollowers.size() && limitCounter < followersRequest.getLimit(); followersIndex++, limitCounter++) {
-                    responseFollowers.add(allFollowers.get(followersIndex));
-                }
-                hasMorePages = followersIndex < allFollowers.size();
-            }
-        }
-        return new FollowersResponse(getDummyFollowers(), hasMorePages);
+        return null;
     }
 
     private int getFollowersStartingIndex(User lastFollower, List<User> allFollowers) {

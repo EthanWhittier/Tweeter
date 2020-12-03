@@ -31,17 +31,17 @@ public class StoryServiceTest {
 
         User currentUser = new User("Test", "User",
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
-        Status status1 = new Status("statues", null, "11/4/2333", null, currentUser);
-        Status status2 = new Status("statusTEst", null, "99/23/3330", null, currentUser);
-        Status status3 = new Status("StatusTes3", null, "52/29/3040", null, currentUser);
+        Status status1 = new Status("statues", null, 0, null, currentUser);
+        Status status2 = new Status("statusTEst", null, 0, null, currentUser);
+        Status status3 = new Status("StatusTes3", null, 0, null, currentUser);
         List<Status> statuses = new ArrayList<>();
         statuses.add(status1);
         statuses.add(status2);
         statuses.add(status3);
 
 
-        request = new StoryRequest(currentUser, 3, null);
-        response = new StoryResponse(statuses, true);
+        request = new StoryRequest(currentUser, 3, 0);
+        response = new StoryResponse(statuses, true, 0);
 
         storyDAOMock = Mockito.mock(StoryDAO.class);
         Mockito.when(storyDAOMock.getStory(request)).thenReturn(response);
@@ -54,7 +54,7 @@ public class StoryServiceTest {
 
     @Test
     void testStoryService() {
-        Assertions.assertEquals(response.getUserStatuses().get(1).getMessage(), storyServiceSpy.getStory(request).getUserStatuses().get(1).getMessage());
+        Assertions.assertEquals(response.getUserStatuses().get(1).getStatus(), storyServiceSpy.getStory(request).getUserStatuses().get(1).getStatus());
     }
 
 

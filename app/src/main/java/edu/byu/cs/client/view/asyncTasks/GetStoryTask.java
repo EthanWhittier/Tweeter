@@ -22,7 +22,6 @@ public class GetStoryTask extends AsyncTask<StoryRequest, Void, StoryResponse> {
     public GetStoryTask(StoryPresenter storyPresenter, Observer observer) {
         this.storyPresenter = storyPresenter;
         this.observer = observer;
-
     }
 
     @Override

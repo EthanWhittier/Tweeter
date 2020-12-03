@@ -10,6 +10,7 @@ import tweeter.model.service.request.RegisterRequest;
 import tweeter.model.service.response.RegisterResponse;
 import tweeter.server.dao.AuthTokenDAO;
 import tweeter.server.dao.UserDAO;
+import tweeter.server.dao.fill.Filler;
 import tweeter.server.factory.FactoryManager;
 
 public class GenerateTestData {
@@ -37,6 +38,12 @@ public class GenerateTestData {
     @Test
     void registerUser() throws TweeterRemoteException {
         userDAO.register(request);
+    }
+
+
+    @Test
+    void fillDatabase() {
+        Filler.fillDatabase();
     }
 
 

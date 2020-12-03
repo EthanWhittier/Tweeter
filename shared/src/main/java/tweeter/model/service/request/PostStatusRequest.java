@@ -10,7 +10,7 @@ public class PostStatusRequest {
 
     public PostStatusRequest() {}
 
-    public PostStatusRequest(String status, User user) {
+    public PostStatusRequest(String status, User author) {
         this.status = status;
         this.author = author;
     }
@@ -25,5 +25,6 @@ public class PostStatusRequest {
 
     public User getAuthor() {return author;}
 
-    public void setAuthor(User user) {this.author = author;}
+    public void setAuthor(User author) {this.author = author;}
+
 }

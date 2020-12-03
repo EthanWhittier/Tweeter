@@ -11,7 +11,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
+import edu.byu.cs.client.DataCache;
 import edu.byu.cs.client.R;
+import edu.byu.cs.client.view.SectionsPagerAdapterProfile;
 import tweeter.model.domain.AuthToken;
 import tweeter.model.domain.Follow;
 import tweeter.model.domain.User;
@@ -29,9 +31,11 @@ public class ProfileActivity extends AppCompatActivity implements MainBarPresent
     public static final String PROFILE_USER_KEY = "UserKey";
     public static final String AUTH_TOKEN_KEY = "AuthTokenKey";
     private static final String LOG_TAG = "ProfileActivity";
+    public static final String IS_FOLLOWING = "FollowingKey";
 
     private User usersProfile;
     private MainBarPresenter presenter;
+    private boolean isFollowing;
 
     //TODO I think it would be great to load in the follow relationship if exists using asynctask on creation for backend
 
@@ -42,30 +46,38 @@ public class ProfileActivity extends AppCompatActivity implements MainBarPresent
 
         presenter = new MainBarPresenter(this);
 
-        usersProfile = (User) getIntent().getSerializableExtra(PROFILE_USER_KEY);
+        usersProfile = DataCache.getDataCache().getCurrentProfile();
+        isFollowing = getIntent().getBooleanExtra(IS_FOLLOWING, false);
+
         if(usersProfile == null) {
             throw new RuntimeException("User was never passed to activity");
         }
 
-        AuthToken authToken = (AuthToken) getIntent().getSerializableExtra(AUTH_TOKEN_KEY);
-
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), usersProfile, authToken);
+      //AuthToken authToken = (AuthToken) getIntent().getSerializableExtra(AUTH_TOKEN_KEY);
+        AuthToken authToken = new AuthToken();
+        SectionsPagerAdapterProfile sectionsPagerAdapterProfile = new SectionsPagerAdapterProfile(this, getSupportFragmentManager(), usersProfile, authToken);
         ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(sectionsPagerAdapter);
+        viewPager.setAdapter(sectionsPagerAdapterProfile);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
-        tabs.removeTabAt(0);
 
         Button followButton = (Button) findViewById(R.id.followUnfollow);
+
+        if(isFollowing) {
+            followButton.setText("Unfollow");
+        } else {
+            followButton.setText("Follow");
+        }
+
         followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(followButton.getText().toString().equals("Follow")) {
-                    FollowRequest followRequest = new FollowRequest(new Follow(usersProfile, usersProfile));
+                    FollowRequest followRequest = new FollowRequest(DataCache.getInstance().getLoggedInUser().getAlias(), usersProfile.getAlias());
                     FollowTask followTask = new FollowTask(presenter, ProfileActivity.this);
                     followTask.execute(followRequest);
                 } else {
-                    UnfollowRequest unfollowRequest = new UnfollowRequest(new Follow(usersProfile, usersProfile));
+                    UnfollowRequest unfollowRequest = new UnfollowRequest(DataCache.getInstance().getLoggedInUser().getAlias(), usersProfile.getAlias());
                     UnfollowTask unfollowTask = new UnfollowTask(presenter, ProfileActivity.this);
                     unfollowTask.execute(unfollowRequest);
                 }

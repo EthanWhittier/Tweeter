@@ -29,19 +29,19 @@ public class FeedServiceTest {
 
         User user = new User("Test", "User",
                 "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
-        Status status1 = new Status("Hello", null, "10/4/2393", null, user);
-        Status status2 = new Status("Test", null, "39/23/3930", null, user);
-        Status status3 = new Status("Test2", null, "58/29/3940", null, user);
+        Status status1 = new Status("Hello", null, 0, null, user);
+        Status status2 = new Status("Test", null, 0, null, user);
+        Status status3 = new Status("Test2", null, 0, null, user);
         List<Status> statuses = new ArrayList<>();
         statuses.add(status1);
         statuses.add(status2);
         statuses.add(status3);
 
-        request = new FeedRequest(user, 3, null);
-        response = new FeedResponse(statuses, true);
+        //request = new FeedRequest(user, 3, null);
+       // response = new FeedResponse(statuses, true);
 
-        statusDAOMock = Mockito.mock(StatusDAO.class);
-        Mockito.when(statusDAOMock.getFeed(request)).thenReturn(response);
+      //  statusDAOMock = Mockito.mock(StatusDAO.class);
+      //  Mockito.when(statusDAOMock.getFeed(request)).thenReturn(response);
 
         feedServiceSpy = Mockito.spy(new FeedService());
         Mockito.when(feedServiceSpy.getStatusDAO()).thenReturn(statusDAOMock);
@@ -50,7 +50,7 @@ public class FeedServiceTest {
 
     @Test
     void testFeedService() {
-        Assertions.assertEquals(response.getStatuses().get(2).getMessage(), feedServiceSpy.getFeed(request).getStatuses().get(2).getMessage());
+        Assertions.assertEquals(response.getStatuses().get(2).getStatus(), feedServiceSpy.getFeed(request).getStatuses().get(2).getStatus());
     }
 
 

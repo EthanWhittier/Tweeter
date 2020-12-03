@@ -12,7 +12,10 @@ import com.google.gson.Gson;
 import java.time.LocalDateTime;
 import java.util.*;
 
+
 import tweeter.model.domain.AuthToken;
+import tweeter.model.net.TweeterRemoteException;
+import tweeter.model.service.response.LogoutResponse;
 
 public class AuthTokenDAO {
 
@@ -25,7 +28,7 @@ public class AuthTokenDAO {
 
     private final String TableName = "AuthToken";
 
-    private final String TokenAttr = "auth_token";
+    private final String TokenAttr = "authToken";
     private final String CreatedAttr = "created";
 
 
@@ -43,7 +46,7 @@ public class AuthTokenDAO {
     }
 
 
-    public AuthToken getAuthToken(String authToken) {
+    public AuthToken getAuthToken(String authToken) throws TweeterRemoteException {
         Table table = dynamoDB.getTable(TableName);
 
         QuerySpec spec = new QuerySpec()
@@ -53,12 +56,33 @@ public class AuthTokenDAO {
 
         ItemCollection<QueryOutcome> items = table.query(spec);
 
-        for(Item item: items) {
-            String json = JsonSerializer.serialize(item.asMap());
-            return JsonSerializer.deserialize(json, AuthToken.class);
+        try {
+            for (Item item : items) {
+                String json = JsonSerializer.serialize(item.asMap());
+                return JsonSerializer.deserialize(json, AuthToken.class);
+            }
+        } catch (Exception e) {
+            throw new TweeterRemoteException(e.getMessage(), null, null);
         }
 
         return null;
+    }
+
+    /**
+     * Logs out a user on the server by deleting their AuthToken
+     *
+     * @param authToken
+     * @return
+     */
+    public boolean logout(String authToken) {
+        Table table = dynamoDB.getTable(TableName);
+        try {
+            table.deleteItem(TokenAttr, authToken);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 
 

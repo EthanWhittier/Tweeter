@@ -8,6 +8,7 @@ import java.util.UUID;
 
 
 import tweeter.model.domain.AuthToken;
+import tweeter.model.net.TweeterRemoteException;
 import tweeter.server.dao.AuthTokenDAO;
 import tweeter.server.factory.FactoryManager;
 
@@ -22,7 +23,7 @@ public class AuthTokenDAOTest {
     }
 
     @Test
-    void testInsertAuthToken() {
+    void testInsertAuthToken() throws TweeterRemoteException {
         //Insert into table
         String token = UUID.randomUUID().toString();
         authTokenDAO.addAuthToken(token);
@@ -34,6 +35,21 @@ public class AuthTokenDAOTest {
 
     }
 
+
+    @Test
+    void testDeleteAuthToken() throws TweeterRemoteException {
+        //Insert into table
+        String token = UUID.randomUUID().toString();
+        authTokenDAO.addAuthToken(token);
+
+        //Logout/Delete Token
+        authTokenDAO.logout(token);
+
+        //Check to make sure it is not there
+        Assertions.assertNull(authTokenDAO.getAuthToken(token));
+
+
+    }
 
 }
 

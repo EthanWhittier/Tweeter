@@ -19,18 +19,17 @@ public class FeedServiceProxy implements FeedServiceInterface {
         ServerFacade serverFacade = getServerFacade();
         FeedResponse feedResponse = serverFacade.getFeed(feedRequest, FEED_URL);
         if(feedResponse.isSuccess()) {
-            if(feedResponse.getStatuses().size() > 0) {
-                loadImages(feedResponse);
-            }
+            loadImages(feedResponse);
         }
         return feedResponse;
     }
+
 
     private void loadImages(FeedResponse feedResponse)  {
         for(Status status : feedResponse.getStatuses()) {
             try {
                 User user = status.getAuthor();
-                byte[] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
+                byte[] bytes = ByteArrayUtils.bytesFromUrl(user.getAlias());
                 user.setImageBytes(bytes);
             } catch (IOException e) {
                 e.printStackTrace();
